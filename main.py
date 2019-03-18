@@ -1,9 +1,8 @@
 import torch
 from options  import train_opts
-from utils    import logger, recorders
+from utils    import logger, recorders, tensorboard
 from datasets import custom_data_loader
 from models   import custom_model, solver_utils, model_utils
-
 import train_utils
 import test_utils
 
@@ -18,11 +17,13 @@ def main(args):
     criterion = solver_utils.Criterion(args)
     recorder  = recorders.Records(args.log_dir, records)
 
+    tensorboard = tensorboard.Logger("/tmp")
+
     for epoch in range(args.start_epoch, args.epochs+1):
         scheduler.step()
         recorder.insertRecord('train', 'lr', epoch, scheduler.get_lr()[0])
 
-        train_utils.train(args, train_loader, model, criterion, optimizer, log, epoch, recorder)
+        train_utils.train(args, train_loader, model, criterion, optimizer, log, epoch, recorder, tensorboard)
         if epoch % args.save_intv == 0: 
             model_utils.saveCheckpoint(args.cp_dir, epoch, model, optimizer, recorder.records, args)
 
