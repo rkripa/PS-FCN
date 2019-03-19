@@ -29,10 +29,8 @@ def train(args, loader, model, criterion, optimizer, log, epoch, recorder, tenso
             opt = {'split':'train', 'epoch':epoch, 'iters':iters, 'batch':len(loader), 
                     'timer':timer, 'recorder': recorder}
             #rkripa ---
-            import pdb; pdb.set_trace()
-            info = { 'loss': loss.item() }
-            for tag, value in info.items():
-                tensorboard.scalar_summary(tag, value, step+1)
+            for tag, value in loss.items():
+                tensorboard.scalar_summary(tag, value, iters)
             #rkripa ---
 
             log.printItersSummary(opt)

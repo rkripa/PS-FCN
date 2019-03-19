@@ -17,13 +17,13 @@ def main(args):
     criterion = solver_utils.Criterion(args)
     recorder  = recorders.Records(args.log_dir, records)
 
-    tensorboard = tensorboard.Logger("/tmp")
+    tensorboard_if = tensorboard.Logger("/tmp")
 
     for epoch in range(args.start_epoch, args.epochs+1):
         scheduler.step()
         recorder.insertRecord('train', 'lr', epoch, scheduler.get_lr()[0])
 
-        train_utils.train(args, train_loader, model, criterion, optimizer, log, epoch, recorder, tensorboard)
+        train_utils.train(args, train_loader, model, criterion, optimizer, log, epoch, recorder, tensorboard_if)
         if epoch % args.save_intv == 0: 
             model_utils.saveCheckpoint(args.cp_dir, epoch, model, optimizer, recorder.records, args)
 
