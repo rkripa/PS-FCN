@@ -15,6 +15,7 @@ eval_log_dir = 'logs/tensorboard/' + current_time + '/eval'
 train_summary_writer = tf.summary.create_file_writer(train_log_dir)
 eval_summary_writer = tf.summary.create_file_writer(eval_log_dir)
 
+
 def train_tensorboard(tag, value, step):
     with train_summary_writer.as_default():
         tf.summary.scalar(tag, value, step=step)

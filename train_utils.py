@@ -1,7 +1,9 @@
 from models import model_utils
 from utils  import time_utils 
 
-def train(args, loader, model, criterion, optimizer, log, epoch, recorder, tensorboard):
+from utils  import tensorboard
+
+def train(args, loader, model, criterion, optimizer, log, epoch, recorder, not_used_tensorboard):
     model.train()
     print('---- Start Training Epoch %d: %d batches ----' % (epoch, len(loader)))
     timer = time_utils.Timer(args.time_sync);
@@ -32,7 +34,7 @@ def train(args, loader, model, criterion, optimizer, log, epoch, recorder, tenso
 
             #rkripa ---
             for tag, value in loss.items():
-                tensorboard.scalar_summary(tag, value, iters)
+               # tensorboard.scalar_summary(tag, value, iters)
                 tensorboard.train_tensorboard(tag, value, iters)
             #rkripa ---
 

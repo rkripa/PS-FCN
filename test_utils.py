@@ -5,13 +5,15 @@ import numpy as np
 from models import model_utils
 from utils import eval_utils, time_utils 
 
+from utils  import tensorboard
+
 def get_itervals(args, split):
     args_var = vars(args)
     disp_intv = args_var[split+'_disp']
     save_intv = args_var[split+'_save']
     return disp_intv, save_intv
 
-def test(args, split, loader, model, log, epoch, recorder, tensorboard):
+def test(args, split, loader, model, log, epoch, recorder, not_used_tensorboard):
     model.eval()
     print('---- Start %s Epoch %d: %d batches ----' % (split, epoch, len(loader)))
     timer = time_utils.Timer(args.time_sync);
@@ -33,7 +35,8 @@ def test(args, split, loader, model, log, epoch, recorder, tensorboard):
                 log.printItersSummary(opt)
                 #rkripa ---
                 for tag, value in acc.items():
-                    tensorboard.scalar_summary(tag, value, iters)
+                    #tensorboard.scalar_summary(tag, value, iters)
+                    tensorboard.train_tensorboard(tag, value.item(), iters)
                 #rkripa ---
 
             if iters % save_intv == 0:

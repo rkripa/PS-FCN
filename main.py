@@ -17,13 +17,9 @@ def main(args):
     criterion = solver_utils.Criterion(args)
     recorder  = recorders.Records(args.log_dir, records)
 
-    current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    train_log_dir = './data/tensorboard/' + current_time + '/train'
-    test_log_dir = './data/tensorboard/' + current_time + '/test'
-    train_summary_writer = tf.summary.create_file_writer(train_log_dir)
-    test_summary_writer = tf.summary.create_file_writer(test_log_dir)
 
-    tensorboard_if = tensorboard.Logger("/tmp")
+    # tensorboard_if = tensorboard.Logger("/tmp")
+    tensorboard_if = None
 
     for epoch in range(args.start_epoch, args.epochs+1):
         scheduler.step()
