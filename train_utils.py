@@ -28,12 +28,14 @@ def train(args, loader, model, criterion, optimizer, log, epoch, recorder, tenso
         if iters % args.train_disp == 0:
             opt = {'split':'train', 'epoch':epoch, 'iters':iters, 'batch':len(loader), 
                     'timer':timer, 'recorder': recorder}
+            log.printItersSummary(opt)
+
             #rkripa ---
             for tag, value in loss.items():
                 tensorboard.scalar_summary(tag, value, iters)
+                tensorboard.train_tensorboard(tag, value, iters)
             #rkripa ---
 
-            log.printItersSummary(opt)
 
     opt = {'split': 'train', 'epoch': epoch, 'recorder': recorder}
     log.printEpochSummary(opt)

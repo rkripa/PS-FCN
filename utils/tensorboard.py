@@ -1,11 +1,27 @@
 import tensorflow as tf
 import numpy as np
 import scipy.misc 
+from datetime import datetime
 
 try:
     from StringIO import StringIO  # Python 2.7
 except ImportError:
     from io import BytesIO         # Python 3.x
+
+
+current_time = datetime.now().strftime("%Y%m%d-%H%M%S")
+train_log_dir = 'logs/tensorboard/' + current_time + '/train'
+eval_log_dir = 'logs/tensorboard/' + current_time + '/eval'
+train_summary_writer = tf.summary.create_file_writer(train_log_dir)
+eval_summary_writer = tf.summary.create_file_writer(eval_log_dir)
+
+def train_tensorboard(tag, value, step):
+    with train_summary_writer.as_default():
+        tf.summary.scalar(tag, value, step=step)
+
+def eval_tensorboard(tag, value, step):
+    with eval_summary_writer.as_default():
+        tf.summary.scalar(tag, value, step=step)
 
 
 class Logger(object):

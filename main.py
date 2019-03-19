@@ -17,6 +17,12 @@ def main(args):
     criterion = solver_utils.Criterion(args)
     recorder  = recorders.Records(args.log_dir, records)
 
+    current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    train_log_dir = './data/tensorboard/' + current_time + '/train'
+    test_log_dir = './data/tensorboard/' + current_time + '/test'
+    train_summary_writer = tf.summary.create_file_writer(train_log_dir)
+    test_summary_writer = tf.summary.create_file_writer(test_log_dir)
+
     tensorboard_if = tensorboard.Logger("/tmp")
 
     for epoch in range(args.start_epoch, args.epochs+1):
@@ -28,7 +34,7 @@ def main(args):
             model_utils.saveCheckpoint(args.cp_dir, epoch, model, optimizer, recorder.records, args)
 
         if epoch % args.val_intv == 0:
-            test_utils.test(args, 'val', val_loader, model, log, epoch, recorder)
+            test_utils.test(args, 'val', val_loader, model, log, epoch, recorder, tensorboard_if)
 
 if __name__ == '__main__':
     torch.manual_seed(args.seed)
