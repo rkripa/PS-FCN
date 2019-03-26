@@ -4,8 +4,7 @@ import torchvision.utils as vutils
 import numpy as np
 from models import model_utils
 from utils import eval_utils, time_utils 
-
-from utils  import tensorboard
+from utils import tfboard
 
 def get_itervals(args, split):
     args_var = vars(args)
@@ -13,7 +12,7 @@ def get_itervals(args, split):
     save_intv = args_var[split+'_save']
     return disp_intv, save_intv
 
-def test(args, split, loader, model, log, epoch, recorder, not_used_tensorboard):
+def test(args, split, loader, model, log, epoch, recorder, tf_writer):
     model.eval()
     print('---- Start %s Epoch %d: %d batches ----' % (split, epoch, len(loader)))
     timer = time_utils.Timer(args.time_sync);
@@ -33,11 +32,8 @@ def test(args, split, loader, model, log, epoch, recorder, not_used_tensorboard)
                 opt = {'split':split, 'epoch':epoch, 'iters':iters, 'batch':len(loader), 
                         'timer':timer, 'recorder': recorder}
                 log.printItersSummary(opt)
-                #rkripa ---
                 for tag, value in acc.items():
-                    #tensorboard.scalar_summary(tag, value, iters)
-                    tensorboard.train_tensorboard(tag, value.item(), iters)
-                #rkripa ---
+                    tfboard.tensorboard_scalar(tf_writer, tag, value, iters)
 
             if iters % save_intv == 0:
                 pred = (out_var.data + 1) / 2

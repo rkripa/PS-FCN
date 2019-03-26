@@ -1,10 +1,11 @@
 import torch
 from options  import train_opts
-from utils    import logger, recorders, tensorboard
+from utils    import logger, recorders, tfboard
 from datasets import custom_data_loader
 from models   import custom_model, solver_utils, model_utils
 import train_utils
 import test_utils
+
 
 args = train_opts.TrainOpts().parse()
 log  = logger.Logger(args)
@@ -17,20 +18,18 @@ def main(args):
     criterion = solver_utils.Criterion(args)
     recorder  = recorders.Records(args.log_dir, records)
 
-
-    # tensorboard_if = tensorboard.Logger("/tmp")
-    tensorboard_if = None
+    tf_train_writer, tf_test_writer = tfboard.tensorboard_init()
 
     for epoch in range(args.start_epoch, args.epochs+1):
         scheduler.step()
         recorder.insertRecord('train', 'lr', epoch, scheduler.get_lr()[0])
 
-        train_utils.train(args, train_loader, model, criterion, optimizer, log, epoch, recorder, tensorboard_if)
+        train_utils.train(args, train_loader, model, criterion, optimizer, log, epoch, recorder, tf_train_writer)
         if epoch % args.save_intv == 0: 
             model_utils.saveCheckpoint(args.cp_dir, epoch, model, optimizer, recorder.records, args)
 
         if epoch % args.val_intv == 0:
-            test_utils.test(args, 'val', val_loader, model, log, epoch, recorder, tensorboard_if)
+            test_utils.test(args, 'val', val_loader, model, log, epoch, recorder, tf_test_writer)
 
 if __name__ == '__main__':
     torch.manual_seed(args.seed)

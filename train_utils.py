@@ -1,9 +1,8 @@
 from models import model_utils
 from utils  import time_utils 
+from utils  import tfboard
 
-from utils  import tensorboard
-
-def train(args, loader, model, criterion, optimizer, log, epoch, recorder, not_used_tensorboard):
+def train(args, loader, model, criterion, optimizer, log, epoch, recorder, tf_writer):
     model.train()
     print('---- Start Training Epoch %d: %d batches ----' % (epoch, len(loader)))
     timer = time_utils.Timer(args.time_sync);
@@ -32,11 +31,8 @@ def train(args, loader, model, criterion, optimizer, log, epoch, recorder, not_u
                     'timer':timer, 'recorder': recorder}
             log.printItersSummary(opt)
 
-            #rkripa ---
             for tag, value in loss.items():
-               # tensorboard.scalar_summary(tag, value, iters)
-                tensorboard.train_tensorboard(tag, value, iters)
-            #rkripa ---
+                tfboard.tensorboard_scalar(tf_writer, tag, value, iters)
 
 
     opt = {'split': 'train', 'epoch': epoch, 'recorder': recorder}
