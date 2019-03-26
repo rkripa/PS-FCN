@@ -8,7 +8,7 @@ import torch
 import torch.utils.data as data
 
 from datasets import pms_transforms
-import util
+from datasets import util
 np.random.seed(0)
 
 class DiLiGenT_main(data.Dataset):

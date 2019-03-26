@@ -1,6 +1,6 @@
 import datetime, time
 import os
-import utils
+from utils import utils
 import numpy as np
 import torch
 import torchvision.utils as vutils

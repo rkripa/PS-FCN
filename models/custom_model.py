@@ -1,4 +1,4 @@
-import model_utils
+from models import model_utils
 
 def buildModel(args):
     print('Creating Model %s' % (args.model))
